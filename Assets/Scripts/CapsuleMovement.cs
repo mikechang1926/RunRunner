@@ -8,17 +8,18 @@ public class CapsuleMovement : MonoBehaviour
 
     private bool gameOver = false;
     private GameManager gameManager;
+    private Animator animator;  // Reference to Animator component
 
     void Start()
     {
-        // Ensure GameManager is correctly found
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        animator = GetComponent<Animator>();  // Get Animator component
     }
 
     void Update()
     {
         if (gameOver)
-            return;
+            return;  // Clearly stop all movement when game is over
 
         float horizontalInput = Input.GetAxis("Horizontal");
         float newXPosition = transform.position.x + horizontalInput * horizontalSpeed * Time.deltaTime;
@@ -31,7 +32,11 @@ public class CapsuleMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Obstacle") && !gameOver)
         {
             gameOver = true;
-            gameManager.GameOver(); // explicitly call GameOver here
+
+            // Set Animator Boolean "blocked" to true, clearly triggering animation
+            animator.SetBool("blocked", true);
+
+            gameManager.GameOver();
         }
     }
 }
